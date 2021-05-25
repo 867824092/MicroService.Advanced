@@ -18,10 +18,10 @@ namespace MicroService.Order {
     public class Program {
 
         /*
-         *  ¶©µ¥·þÎñ
-         *  Api¶Ë¿Ú·¶Î§£º10410~10419
-         *  Grpc¶Ë¿Ú·¶Î§£º10420~10429
-         *  ÃüÁî²ÎÊý --web-port  --grpc-port
+         *  è®¢å•æœåŠ¡
+         *  Apiç«¯å£èŒƒå›´ï¼š10410~10419
+         *  Grpcç«¯å£èŒƒå›´ï¼š10420~10429
+         *  å‘½ä»¤å‚æ•° --web-port  --grpc-port
          *  dotnet .\MicroService.Order.dll --web-port=10410 --grpc-port=10420
          *  dotnet .\MicroService.Order.dll --web-port=10411 --grpc-port=10421
          */
@@ -57,14 +57,14 @@ namespace MicroService.Order {
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .UseSerilog() // <-- Add this line
-                .ConfigureAppConfiguration((context, builder) => { //¸ù¾Ý»·¾³±äÁ¿Ìí¼Ó²»Í¬µÄÎÄ¼þ
+                .ConfigureAppConfiguration((context, builder) => { //å¤šçŽ¯å¢ƒåŠ è½½é…ç½®æ–‡ä»¶
                     if (!context.HostingEnvironment.IsProduction()) {
                         builder.AddJsonFile($"appsettings.{context.HostingEnvironment.EnvironmentName}.json", optional: false, reloadOnChange: true);
                     }
-                    builder.AddCommandLine(args);//¼ÓÈëÃüÁî²ÎÊý
+                    builder.AddCommandLine(args);//æ·»åŠ å‘½ä»¤è¡Œå‚æ•°
                 })
                 .ConfigureWebHostDefaults(webBuilder => {
-                    webBuilder.ConfigureKestrel((context, options) => { // API GRPC¼àÌýµØÖ·
+                    webBuilder.ConfigureKestrel((context, options) => { // API GRPCç›‘å¬æœåŠ¡
                         var configuration = context.Configuration;
                         string ip = configuration["Ip"];
                         options.Listen(IPAddress.Parse(ip), int.Parse(configuration[web_port]), c => c.Protocols = HttpProtocols.Http1);

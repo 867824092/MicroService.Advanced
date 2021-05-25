@@ -12,7 +12,7 @@
       ],
       "DownstreamPathTemplate": "/api/{url}",
       "DownstreamScheme": "http",
-      "ServiceName": "OrderService", //Consul 服务注册与发现
+      "ServiceName": "OrderService", //Consul 鏈嶅姟鍚嶇О
       //"DownstreamHostAndPorts": [
       //  {
       //    "Host": "localhost",
