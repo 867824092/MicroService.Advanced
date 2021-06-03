@@ -7,10 +7,11 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["src/4--AuthenticationCenter/MicroService.Authentication.Center/MicroService.Authentication.Center.csproj", "src/4--AuthenticationCenter/MicroService.Authentication.Center/"]
-RUN dotnet restore "src/4--AuthenticationCenter/MicroService.Authentication.Center/MicroService.Authentication.Center.csproj"
+#此处路径为远程服务器所在路径
+COPY ["src/AuthenticationCenter/MicroService.Authentication.Center.csproj", "src/AuthenticationCenter/"]
+RUN dotnet restore "src/AuthenticationCenter/MicroService.Authentication.Center.csproj"
 COPY . .
-WORKDIR "/src/src/4--AuthenticationCenter/MicroService.Authentication.Center"
+WORKDIR "/src/src/AuthenticationCenter/"
 RUN dotnet build "MicroService.Authentication.Center.csproj" -c Release -o /app/build
 
 FROM build AS publish
