@@ -10,16 +10,21 @@ namespace MicroService.Authentication.Center {
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.IdentityModel.Tokens;
     using Serilog;
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
 
     public class Startup {
-        public Startup(IConfiguration configuration) {
+        IWebHostEnvironment Environment { get; }
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment) {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
@@ -29,15 +34,20 @@ namespace MicroService.Authentication.Center {
             services.AddControllersWithViews();
 
             //services.AddCookiePolicy(options => {
-                
+
             //    });
-            services.AddIdentityServer()
-            .AddDeveloperSigningCredential(true)
-            .AddInMemoryApiScopes(Config.ApiScopes)
+            var identityServerBuilder =   services.AddIdentityServer();
+            if (Environment.IsDevelopment()) {
+                identityServerBuilder.AddDeveloperSigningCredential(true);
+            } else {
+                identityServerBuilder.AddSigningCredential(new X509Certificate2(Path.Combine(Environment.ContentRootPath,
+                  Configuration["Certificates:CertPath"]),
+                  Configuration["Certificates:Password"]));
+            }
+            identityServerBuilder.AddInMemoryApiScopes(Config.ApiScopes)
             .AddInMemoryClients(Config.Clients)
             .AddInMemoryIdentityResources(Config.IdentityResource)
-            .AddTestUsers(Config.TestUsers)
-            ;
+            .AddTestUsers(Config.TestUsers);
 
             #region 集成 efcore aspnetIdentity身份验证
         //services.AddDbContext<ApplicationDbContext>(options =>
